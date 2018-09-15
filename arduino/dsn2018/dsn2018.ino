@@ -3,8 +3,8 @@
 #include <ArduinoJson.h>
 
 // KONSTANTE
-const char mreza[] = "xxxxxx";  
-const char mrezaLozinka[] = "xxxxxx"; 
+const char mreza[] = "xxxx";  
+const char mrezaLozinka[] = "xxxx"; 
 const char apiURL[] = "http://dweet.io/get/latest/dweet/for/dsn2018"; 
 
 const int ledPin = 5; //D1
@@ -26,7 +26,7 @@ void setup() {
 void loop() {
 
   odradiAPIupit();
-  
+  /*
   digitalWrite(ledPin, LOW);
   digitalWrite(onlinePin, HIGH);
   Serial.println("---------");
@@ -34,7 +34,8 @@ void loop() {
   digitalWrite(ledPin, HIGH);
   digitalWrite(onlinePin, LOW);
   delay(1000);
-
+*/
+delay(10000); 
   if(WiFi.status()==3){
     digitalWrite(wifiPin,LOW);
   }
@@ -51,9 +52,15 @@ void odradiAPIupit(){
     Serial.println(vratioDweet);
     StaticJsonBuffer<400> jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(vratioDweet);
-    const char* vrata = root["with"][0]["content"]["vrata"];
-    Serial.print("vrata -> ");
-    Serial.println(vrata);
+    const char* klima = root["with"][0]["content"]["klima"];
+    Serial.print("klima -> ");
+    Serial.println(klima);
+    const char* rasvjeta = root["with"][0]["content"]["rasvjeta"];
+    Serial.print("rasvjeta -> ");
+    Serial.println(rasvjeta);
+    const char* grijanje = root["with"][0]["content"]["grijanje"];
+    Serial.print("grijanje -> ");
+    Serial.println(grijanje);
     
   }
   
