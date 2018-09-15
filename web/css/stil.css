@@ -1,0 +1,78 @@
+h1 {
+    text-align: center;
+    font: 3em Helvetica, Arial, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    font: 1.5em Helvetica, Arial, sans-serif;
+    padding: 1em 0 0 0;
+    width: 100%;
+}
+
+img{
+    max-width: 90%;
+    margin: 20px;
+}
+
+.okvir { 
+    background-color: #fbeecb; 
+    padding: 20px;
+}
+.celija { 
+    border-radius: 5px; 
+}
+
+.klima{
+    background-color: #71dad2;
+}
+
+.rasvjeta{
+    background-color: #80a056;
+}
+
+.grijanje{
+    background-color: #b971da;
+}
+
+@media (min-width:320px) {
+    .okvir {
+        grid-template-columns: 1fr;
+    }
+    .celija{
+        min-height: 200px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+
+@media (min-width:481px){
+    .okvir {
+        width: 90%;
+        margin: 0 auto 0 auto;
+        display: grid;
+        grid-template-columns: repeat(12, [col-start] 1fr);
+        grid-template-rows: 30% 450px auto;
+        grid-gap: 30px;
+    }
+
+    .okvir > h1{
+        grid-column: col-start / span 12;
+    }
+
+    .klima{
+        grid-column: 1 / 5;
+    }
+
+    .rasvjeta{
+        grid-column: 5 / 9;
+    }
+
+    .grijanje{
+        grid-column: 9 / 13;
+    }
+}
+
+
+    
