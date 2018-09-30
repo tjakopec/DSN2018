@@ -4,19 +4,25 @@
 
 // KONSTANTE
 const char mreza[] = "xxxx";  
-const char mrezaLozinka[] = "xxxx"; 
-const char apiURL[] = "http://dweet.io/get/latest/dweet/for/dsn2018"; 
+const char mrezaLozinka[] = "xxxxx"; 
+const char apiURL[] = "http://dweet.io/get/latest/dweet/for/dsn2018"; //URL od dweet API
 
-const int ledPin = 5; //D1
-const int onlinePin = 4; //D2
-const int wifiPin = 0; //D3
-
+const int klimaPin = 5; //D1 CREVNO
+const int rasvjetaPin = 4; //D2 BIJELO
+const int grijanjePin = 0; //D3 PLAVO
+const char* upaljeno="1"; //vrijednost u JSON
+const int ledUpaljen= LOW;
+const int ledUgasen= HIGH;
+const int intervalAPI=5000;//milisekundi
 
 
 void setup() {
-  pinMode(onlinePin, OUTPUT);
-  pinMode(ledPin, OUTPUT);
-  pinMode(wifiPin,OUTPUT);
+  pinMode(klimaPin,OUTPUT);
+  pinMode(grijanjePin,OUTPUT);
+  pinMode(rasvjetaPin,OUTPUT);
+  digitalWrite(klimaPin,ledUgasen);
+  digitalWrite(grijanjePin,ledUgasen);
+  digitalWrite(rasvjetaPin,ledUgasen);
   Serial.begin(9600);                           
   spojiWIFI();
 
@@ -24,23 +30,8 @@ void setup() {
 }
  
 void loop() {
-
   odradiAPIupit();
-  /*
-  digitalWrite(ledPin, LOW);
-  digitalWrite(onlinePin, HIGH);
-  Serial.println("---------");
-  delay(1000); 
-  digitalWrite(ledPin, HIGH);
-  digitalWrite(onlinePin, LOW);
-  delay(1000);
-*/
-delay(10000); 
-  if(WiFi.status()==3){
-    digitalWrite(wifiPin,LOW);
-  }
-  else
-    digitalWrite(wifiPin,HIGH);
+  delay(); 
 }
 
 void odradiAPIupit(){
@@ -49,18 +40,39 @@ void odradiAPIupit(){
   int httpCode = http.GET();
   if (httpCode==HTTP_CODE_OK){
     String vratioDweet = http.getString();
-    Serial.println(vratioDweet);
+    //Serial.println(vratioDweet);
     StaticJsonBuffer<400> jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(vratioDweet);
+
+
+    
     const char* klima = root["with"][0]["content"]["klima"];
-    Serial.print("klima -> ");
-    Serial.println(klima);
+    digitalWrite(klimaPin, strcmp(klima,upaljeno)==0 ? ledUpaljen : ledUgasen);
+
+
+    
     const char* rasvjeta = root["with"][0]["content"]["rasvjeta"];
-    Serial.print("rasvjeta -> ");
-    Serial.println(rasvjeta);
+    /*
+    Serial.print("rasvjeta ->");
+    Serial.print(rasvjeta);
+    Serial.print("==");
+    Serial.print(upaljeno);
+    Serial.println("<");
+    Serial.println(rasvjeta==upaljeno);
+    */
+    digitalWrite(rasvjetaPin, strcmp(rasvjeta,upaljeno)==0 ? ledUpaljen : ledUgasen);
+    /*
+    if(rasvjeta==upaljeno){
+       digitalWrite(rasvjetaPin,ledUpaljen);
+    }else{
+       digitalWrite(rasvjetaPin,ledUgasen);
+    }
+    */
+
+    
     const char* grijanje = root["with"][0]["content"]["grijanje"];
-    Serial.print("grijanje -> ");
-    Serial.println(grijanje);
+    digitalWrite(grijanjePin, strcmp(grijanje,upaljeno)==0 ? ledUpaljen : ledUgasen);
+   
     
   }
   
@@ -70,7 +82,6 @@ void odradiAPIupit(){
 void spojiWIFI(){
   Serial.println("Spajanje na Wifi...");
   WiFi.begin(mreza, mrezaLozinka); 
-  digitalWrite(onlinePin, LOW);
   while (WiFi.status() != WL_CONNECTED) {  
     delay(500);
     Serial.print(".");
