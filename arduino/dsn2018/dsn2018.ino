@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 
 // KONSTANTE
-const char mreza[] = "xxxx";  
+const char mreza[] = "xxxxx";  
 const char mrezaLozinka[] = "xxxxx"; 
 const char apiURL[] = "http://dweet.io/get/latest/dweet/for/dsn2018"; //URL od dweet API
 
@@ -25,13 +25,11 @@ void setup() {
   digitalWrite(rasvjetaPin,ledUgasen);
   Serial.begin(9600);                           
   spojiWIFI();
-
-  
 }
  
 void loop() {
   odradiAPIupit();
-  delay(); 
+  delay(intervalAPI); 
 }
 
 void odradiAPIupit(){
@@ -40,7 +38,7 @@ void odradiAPIupit(){
   int httpCode = http.GET();
   if (httpCode==HTTP_CODE_OK){
     String vratioDweet = http.getString();
-    //Serial.println(vratioDweet);
+    Serial.println(vratioDweet);
     StaticJsonBuffer<400> jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(vratioDweet);
 
